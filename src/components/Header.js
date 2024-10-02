@@ -4,14 +4,27 @@ import "./header.css";
 import { Nav } from "./";
 
 export const Header = () => {
-  const [darkMode, setDarkMode] = useState(
-    JSON.parse(localStorage.getItem("darkMode")) || false
-  );
+  const getInitialDarkMode = () => {
+    try {
+      const savedMode = localStorage.getItem("darkMode");
+      return savedMode !== null ? JSON.parse(savedMode) : false;
+    } catch (error) {
+      console.warn("Could not access localStorage:", error);
+      return false; // Default to false if localStorage access fails
+    }
+  };
+
+  const [darkMode, setDarkMode] = useState(getInitialDarkMode());
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState();
 
   useEffect(() => {
-    localStorage.setItem("darkMode", JSON.stringify(darkMode));
+    try {
+      localStorage.setItem("darkMode", JSON.stringify(darkMode));
+    } catch (error) {
+      console.warn("Could not store darkMode in localStorage:", error);
+    }
+
     if (darkMode) {
       document.documentElement.classList.add("dark");
     } else {
@@ -44,8 +57,9 @@ export const Header = () => {
           </div>
 
           <nav
-            className={`lg:order-2 order-3 lg:w-auto w-full lg:block ${isActive ? "is-active" : "hidden"
-              }`}
+            className={`lg:order-2 order-3 lg:w-auto w-full lg:block ${
+              isActive ? "is-active" : "hidden"
+            }`}
           >
             <ul className="flex items-center gap-8 flex-col lg:flex-row lg:m-0 mt-8 mb-4">
               <div className="md:hidden flex items-center relative">
@@ -72,9 +86,13 @@ export const Header = () => {
               onClick={() => setDarkMode(!darkMode)}
               className="flex items-center justify-center border rounded-lg sm:h-9 h-8 sm:w-9 w-8 hover:bg-slate-100 dark:hover:bg-slate-700"
             >
-                <span className={`material-symbols-outlined sm:text-xl text-lg ${darkMode && "text-white"}`}>
-                  {darkMode ? "light_mode" : "dark_mode"}
-                </span>
+              <span
+                className={`material-symbols-outlined sm:text-xl text-lg ${
+                  darkMode && "text-white"
+                }`}
+              >
+                {darkMode ? "light_mode" : "dark_mode"}
+              </span>
             </button>
             <button
               onClick={handleMenu}
@@ -101,8 +119,9 @@ export const Header = () => {
             </div>
             <button
               onClick={handleMenu}
-              className={`flex flex-col gap-[3px] items-center justify-center border rounded-lg sm:h-9 h-8 sm:w-9 w-8 hover:bg-slate-100 dark:hover:bg-slate-700 lg:hidden ${isActive ? "is-active" : ""
-                }`}
+              className={`flex flex-col gap-[3px] items-center justify-center border rounded-lg sm:h-9 h-8 sm:w-9 w-8 hover:bg-slate-100 dark:hover:bg-slate-700 lg:hidden ${
+                isActive ? "is-active" : ""
+              }`}
             >
               <span className="w-4 h-[2px] bg-black dark:bg-white rounded-full"></span>
               <span className="w-4 h-[2px] bg-black dark:bg-white rounded-full"></span>
