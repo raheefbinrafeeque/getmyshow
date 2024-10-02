@@ -1,0 +1,23 @@
+.l-search {
+  @apply text-black text-sm border focus:outline-none h-9 rounded-lg pl-9 pr-4 bg-slate-50 dark:bg-slate-900 dark:text-white;
+}
+.aspect-box {
+  @apply relative;
+  
+}
+
+.aspect-box img,
+.aspect-box video,
+.aspect-box canvas,
+.aspect-box iframe,
+.aspect-box svg {
+  @apply h-full left-0 absolute top-0 w-full object-cover;
+}
+
+.aspect-box:before {
+  @apply content-[""] block pt-[calc(var(--aspect-ratio)*100%)];
+}
+
+.l-tag {
+  @apply py-1 px-2 text-xs rounded-md;
+}
