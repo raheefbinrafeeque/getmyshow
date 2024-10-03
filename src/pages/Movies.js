@@ -33,6 +33,7 @@ export const Movies = ({dataUrl, title}) => {
   }
   useEffect(() => {
     fetchMovies();
+    // eslint-disable-next-line
   }, [url]);
 
   useDocTitle(title);
