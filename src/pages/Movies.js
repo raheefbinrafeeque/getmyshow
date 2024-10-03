@@ -10,17 +10,26 @@ export const Movies = ({dataUrl, title}) => {
 
   const url = `https://api.themoviedb.org/3/${dataUrl}?api_key=${process.env.REACT_APP_MOVIES_API}`
   useEffect(() => {
+    const controller = new AbortController()
     async function fetchMovies() {
       try {
         setLoading(true);
-        setMovies(null)
-        const response = await fetch(url);
+        setMovies([]); // Empty array instead of null
+        const response = await fetch(url, { signal: controller.signal });
+        setError(""); // Clear previous errors
+
+        if (!response.ok) {
+          throw new Error(response.statusText || "Failed to fetch movies");
+        }
+
         const json = await response.json();
         setMovies(json.results);
+      } catch (error) {
+        if (error.name !== "AbortError") { // Ensure it isn't from the abort
+          setError(error.message);
+        }
+      } finally {
         setLoading(false);
-      } catch(error) {
-        setLoading(false);
-        setError(error.message)
       }
     }
     fetchMovies();
